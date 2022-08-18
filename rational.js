@@ -1,32 +1,24 @@
 const getGcd = (a, b) => ((a % b) ? getGcd(b, a % b) : Math.abs(b));
 
-const makeRational = (numerator, denominator) => {
-  const commonDenominator = getGcd(numerator, denominator);
-  if (denominator < 0) {
-    return `${-(numerator / commonDenominator)}/${-(denominator / commonDenominator)}`;
-  }
-  return `${numerator / commonDenominator}/${denominator / commonDenominator}`;
+const makeRational = (numer, denom) => {
+  const gcd = getGcd(numer, denom);
+  return { numer: numer / gcd, denom: denom / gcd };
 };
 
-const getNumer = (rational) => Number(rational.split('/')[0]);
-const getDenom = (rational) => Number(rational.split('/')[1]);
+const getNumer = (rational) => rational.numer;
 
-const add = (rational1, rational2) => {
-  const commonDenominator = getDenom(rational1) * getDenom(rational2);
-  const numeratorRational1 = getNumer(rational1) * getDenom(rational2);
-  const numeratorRational2 = getNumer(rational2) * getDenom(rational1);
-  const sumNumerator = numeratorRational1 + numeratorRational2;
+const getDenom = (rational) => rational.denom;
 
-  return makeRational(sumNumerator, commonDenominator);
-};
+const add = (rational1, rational2) => (
+  makeRational(
+    getNumer(rational1) * getDenom(rational2) + getNumer(rational2) * getDenom(rational1),
+    getDenom(rational1) * getDenom(rational2), 
+  )
+);
 
-const sub = (rational1, rational2) => {
-  const commonDenominator = getDenom(rational1) * getDenom(rational2);
-  const numeratorRational1 = getNumer(rational1) * getDenom(rational2);
-  const numeratorRational2 = getNumer(rational2) * getDenom(rational1);
-  const subNumerator = numeratorRational1 - numeratorRational2;
-
-  return makeRational(subNumerator, commonDenominator);
-};
-
-
+const sub = (rational1, rational2) => (
+  makeRational(
+    getNumer(rational1) * getDenom(rational2) - getNumer(rational2) * getDenom(rational1),
+    getDenom(rational1) * getDenom(rational2),
+  )
+);
